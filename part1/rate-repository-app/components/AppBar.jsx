@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 20,
     flexDirection: 'row',
-    gap: 10
+    gap: 20
   },
   text: {
     color: 'white',
