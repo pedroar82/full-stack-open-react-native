@@ -1,14 +1,21 @@
 import { Text, View, TextInput, Pressable, StyleSheet } from 'react-native'
 import { useFormik } from 'formik'
+import * as yup from 'yup'
 
 const initialValues = {
   username: '',
   password: '',
 }
 
+const validationSchema = yup.object().shape({
+  username: yup.string().required('Username is required'),
+  password: yup.string().required('Password is required'),
+})
+
 const SignIn = () => {
   const formik = useFormik({
     initialValues,
+    validationSchema,
     onSubmit: (values) => {
       console.log(values)
     },
@@ -25,7 +32,6 @@ const SignIn = () => {
     },
     button: {
       backgroundColor: '#0165D4',
-      
       borderWidth: 1,
       borderColor: '#ccc',
       paddingHorizontal: 10,
@@ -39,23 +45,36 @@ const SignIn = () => {
       fontSize: 16,
       fontWeight: '700',
     },
+    inputError: {
+      borderColor: '#d73a4a',
+    },
   })
+
+  const userNameError = formik.touched.username && formik.errors.username
+  const passError = formik.touched.password && formik.errors.password
 
   return (
     <View style={styles.container}>
       <TextInput
         placeholder="Username"
-        style={styles.input}
+        style={[styles.input, userNameError && styles.inputError]}
         value={formik.values.username}
         onChangeText={formik.handleChange('username')}
+        onBlur={formik.handleBlur('username')}
       />
+      {userNameError && (
+        <Text style={{ color: '#d73a4a' }}>{formik.errors.username}</Text>
+      )}
       <TextInput
         placeholder="Password"
         secureTextEntry
-        style={styles.input}
+        style={[styles.input, passError && styles.inputError]}
         value={formik.values.password}
         onChangeText={formik.handleChange('password')}
       />
+      {passError && (
+        <Text style={{ color: '#d73a4a' }}>{formik.errors.password}</Text>
+      )}
       <Pressable style={styles.button} onPress={formik.handleSubmit}>
         <Text style={styles.buttonText}>Sign In</Text>
       </Pressable>
