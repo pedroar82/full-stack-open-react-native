@@ -1,4 +1,6 @@
-import { View, StyleSheet, Text, Image } from 'react-native'
+import { View, StyleSheet,  Image } from 'react-native'
+import Text from './Text';
+import theme from '../theme';
 
 const styles = StyleSheet.create({
   content: {
@@ -20,9 +22,8 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   fulName: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    fontWeight: '700',
+    fontWeight: theme.fontWeights.bold,
+    fontSize: theme.fontSizes.subheading,
     paddingBottom: 10,
   },
   desc: {
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
   },
   language: {
     alignSelf: 'flex-start',
-    backgroundColor: '#0366d6',
+    backgroundColor: theme.colors.primary,
     color: 'white',
     paddingHorizontal: 10,
     paddingVertical: 4,
@@ -40,10 +41,9 @@ const styles = StyleSheet.create({
   },
   stats: {
     width: '25%',
-    fontWeight: 'bold',
-    fontSize: 16,
-    fontWeight: '700',
     textAlign: 'center',
+    fontWeight: theme.fontWeights.bold,
+    fontSize: theme.fontSizes.subheading
   },
   statsDesc: {
     width: '25%',
@@ -75,7 +75,7 @@ const RepositoryItem = ({ item }) => {
       </View>
 
       <View style={styles.row}>
-        <Text style={styles.stats}>
+        <Text style={styles.stats} >
           {thousandsFormat(item.stargazersCount)}
         </Text>
         <Text style={styles.stats}>{thousandsFormat(item.forksCount)}</Text>

@@ -1,6 +1,7 @@
 import { Text, View, TextInput, Pressable, StyleSheet } from 'react-native'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
+import theme from '../theme'
 
 const initialValues = {
   username: '',
@@ -31,7 +32,7 @@ const SignIn = () => {
       borderRadius: 4,
     },
     button: {
-      backgroundColor: '#0165D4',
+      backgroundColor:  theme.colors.primary,
       borderWidth: 1,
       borderColor: '#ccc',
       paddingHorizontal: 10,
