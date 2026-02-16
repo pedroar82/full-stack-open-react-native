@@ -2,7 +2,7 @@ import { View, StyleSheet,  Image } from 'react-native'
 import Text from './Text';
 import theme from '../../theme';
 
-const styles = StyleSheet.create({
+  const styles = StyleSheet.create({
   content: {
     padding: 16,
     gap: 4,
@@ -11,24 +11,26 @@ const styles = StyleSheet.create({
   tinyLogo: {
     width: 50,
     height: 50,
+    borderRadius: 4,
   },
   row: {
     flexDirection: 'row',
-    flex: 1,
   },
   col: {
     flexDirection: 'column',
     paddingLeft: 20,
     paddingBottom: 10,
+    flex: 1,
   },
   fulName: {
     fontWeight: theme.fontWeights.bold,
     fontSize: theme.fontSizes.subheading,
     paddingBottom: 10,
+    
   },
   desc: {
-    fontWeight: '400',
-    color: 'silver',
+    fontWeight: theme.fontWeights.normal,
+    color: theme.colors.textSecondary, 
     paddingBottom: 10,
   },
   language: {
@@ -43,15 +45,16 @@ const styles = StyleSheet.create({
     width: '25%',
     textAlign: 'center',
     fontWeight: theme.fontWeights.bold,
-    fontSize: theme.fontSizes.subheading
+    fontSize: 16,
+    color: theme.colors.textPrimary,  // ← Added
   },
   statsDesc: {
     width: '25%',
-    fontWeight: '400',
-    color: 'silver',
+    fontWeight: theme.fontWeights.normal,
+    color: theme.colors.textSecondary,
     textAlign: 'center',
   },
-})
+});
 
 const RepositoryItem = ({ item }) => {
   const thousandsFormat = (value) => {
@@ -59,7 +62,7 @@ const RepositoryItem = ({ item }) => {
   }
 
   return (
-    <View style={styles.content} testID="repositoryItem">
+    <View style={theme.content} testID="repositoryItem">
       <View style={styles.row}>
         <Image
           style={styles.tinyLogo}

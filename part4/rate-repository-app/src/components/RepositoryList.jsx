@@ -1,7 +1,8 @@
-import { FlatList, View, StyleSheet, Text } from 'react-native';
+import { FlatList, View, StyleSheet, Text, Pressable } from 'react-native';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import RepositoryItem from './RepositoryItem'
 import useRepositories from '../hooks/useRepositories';
+import { useNavigate } from 'react-router-native'
 
 import { useQuery } from '@apollo/client/react';
 
@@ -67,20 +68,29 @@ const styles = StyleSheet.create({
 const ItemSeparator = () => <View style={styles.separator} />
 
 export const RepositoryListContainer = ({ repositories }) => {
+
+  const navigate = useNavigate()
+
   const repositoryNodes = repositories?.edges
     ? repositories.edges.map((edge) => edge.node)
     : []
 
   return (
-  /*   <SafeAreaProvider>
+    /*   <SafeAreaProvider>
       <SafeAreaView style={styles.container}> */
-        <FlatList
-          data={repositoryNodes}
-          keyExtractor={(item) => item.id}
-          ItemSeparatorComponent={ItemSeparator}
-          // other props
-          renderItem={({ item }) => <RepositoryItem item={item} />}
-        />
+    <FlatList
+      data={repositoryNodes}
+      keyExtractor={(item) => item.id}
+      ItemSeparatorComponent={ItemSeparator}
+      // other props
+      renderItem={({ item }) => (
+        <Pressable
+          onPress={() => navigate(`/${item.id}`)}
+        >
+          <RepositoryItem item={item} />
+        </Pressable>
+      )}
+    />
     /*   </SafeAreaView>
     </SafeAreaProvider> */
   )

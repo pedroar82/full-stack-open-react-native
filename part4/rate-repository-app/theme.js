@@ -22,6 +22,11 @@ const theme = {
     normal: '400',
     bold: '700',
   },
+   content: {
+    padding: 16,
+    gap: 4,
+    backgroundColor: 'white',
+  },
 }
 
 export default theme;
