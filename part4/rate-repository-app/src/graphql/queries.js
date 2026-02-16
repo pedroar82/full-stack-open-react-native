@@ -59,6 +59,20 @@ export const GET_REPOSITORY = gql`
       reviewCount
       watchersCount
       userHasReviewed
+      reviews {
+        edges {
+          node {
+            id
+            text
+            rating
+            createdAt
+            user {
+              id
+              username
+            }
+          }
+        }
+      }
     }
   }
 `

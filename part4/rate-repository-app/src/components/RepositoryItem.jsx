@@ -46,7 +46,7 @@ import theme from '../../theme';
     textAlign: 'center',
     fontWeight: theme.fontWeights.bold,
     fontSize: 16,
-    color: theme.colors.textPrimary,  // ← Added
+    color: theme.colors.textPrimary,
   },
   statsDesc: {
     width: '25%',
