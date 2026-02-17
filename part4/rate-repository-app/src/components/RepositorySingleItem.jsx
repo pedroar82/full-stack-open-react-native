@@ -110,6 +110,7 @@ const ReviewItem = ({ review }) => {
 const RepositorySingleItem = () => {
   const { id } = useParams()
   const { data, loading, error } = useQuery(GET_REPOSITORY, {
+    fetchPolicy: 'cache-and-network',
     variables: { id },
   })
 
