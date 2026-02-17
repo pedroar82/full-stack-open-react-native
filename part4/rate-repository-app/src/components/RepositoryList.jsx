@@ -1,9 +1,10 @@
 import { FlatList, View, StyleSheet, Text, Pressable } from 'react-native';
-import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import RepositoryItem from './RepositoryItem'
 import useRepositories from '../hooks/useRepositories';
 import { useNavigate } from 'react-router-native'
 import useMe from '../hooks/useMe';
+import  { useState } from 'react';
+import OrderReposHeader from './OrderReposHeader';
 import { useQuery } from '@apollo/client/react';
 
 import { GET_REPOSITORIES } from '../graphql/queries';
@@ -20,7 +21,7 @@ const styles = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />
 
-export const RepositoryListContainer = ({ repositories }) => {
+export const RepositoryListContainer = ({ repositories, setSorting, selectedSorting }) => {
 
   const navigate = useNavigate()
 
@@ -37,6 +38,12 @@ export const RepositoryListContainer = ({ repositories }) => {
       keyExtractor={(item) => item.id}
       ItemSeparatorComponent={ItemSeparator}
       // other props
+      ListHeaderComponent={
+        <OrderReposHeader 
+          selectedSorting={selectedSorting} 
+          setSorting={setSorting} 
+        />
+      }
       renderItem={({ item }) => (
         <Pressable
           onPress={() => navigate(`/${item.id}`)}
@@ -50,14 +57,21 @@ export const RepositoryListContainer = ({ repositories }) => {
 
 
 const RepositoryList = () => {
-  const { data, error, loading } = useQuery(GET_REPOSITORIES, {
-    fetchPolicy: 'cache-and-network',
+
+  const [sorting, setSorting] = useState({
+    orderBy: 'CREATED_AT',
+    orderDirection: 'DESC',
   })
+
+  const { repositories, loading, error } = useRepositories(
+    sorting.orderBy,
+    sorting.orderDirection,
+  )
 
   if (loading) return <Text>Loading...</Text>
   if (error) return <Text>Error: {error.message}</Text>
 
-  return <RepositoryListContainer repositories={data.repositories} />;
+  return <RepositoryListContainer repositories={repositories} setSorting={setSorting} selectedSorting={sorting}/>;
 }
 
 export default RepositoryList;
