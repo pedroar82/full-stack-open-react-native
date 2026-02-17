@@ -3,11 +3,9 @@ import RepositoryItem from './RepositoryItem'
 import useRepositories from '../hooks/useRepositories';
 import { useNavigate } from 'react-router-native'
 import useMe from '../hooks/useMe';
-import  { useState } from 'react';
+import  { useState, memo } from 'react';
 import OrderReposHeader from './OrderReposHeader';
-import { useQuery } from '@apollo/client/react';
-
-import { GET_REPOSITORIES } from '../graphql/queries';
+import { useDebounce } from 'use-debounce';
 
 const styles = StyleSheet.create({
   separator: {
@@ -15,18 +13,33 @@ const styles = StyleSheet.create({
   },
     container: {
     flex: 1,
-   // marginTop: StatusBar.currentHeight || 0,
   },
 });
 
 const ItemSeparator = () => <View style={styles.separator} />
 
-export const RepositoryListContainer = ({ repositories, setSorting, selectedSorting }) => {
+const ListHeader = memo(
+  ({ selectedSorting, setSorting, searchKeyword, setSearchKeyword }) => (
+    <OrderReposHeader
+      selectedSorting={selectedSorting}
+      setSorting={setSorting}
+      searchKeyword={searchKeyword}
+      setSearchKeyword={setSearchKeyword}
+    />
+  ),
+)
 
+export const RepositoryListContainer = ({
+  repositories,
+  setSorting,
+  selectedSorting,
+  searchKeyword,
+  setSearchKeyword,
+}) => {
   const navigate = useNavigate()
 
-  const { user } = useMe();
-  if (!user) return <Text>Please sign in...</Text>;
+  const { user } = useMe()
+  if (!user) return <Text>Please sign in...</Text>
 
   const repositoryNodes = repositories?.edges
     ? repositories.edges.map((edge) => edge.node)
@@ -37,41 +50,51 @@ export const RepositoryListContainer = ({ repositories, setSorting, selectedSort
       data={repositoryNodes}
       keyExtractor={(item) => item.id}
       ItemSeparatorComponent={ItemSeparator}
-      // other props
       ListHeaderComponent={
-        <OrderReposHeader 
-          selectedSorting={selectedSorting} 
-          setSorting={setSorting} 
+        <ListHeader
+          selectedSorting={selectedSorting}
+          setSorting={setSorting}
+          searchKeyword={searchKeyword}
+          setSearchKeyword={setSearchKeyword}
         />
       }
       renderItem={({ item }) => (
-        <Pressable
-          onPress={() => navigate(`/${item.id}`)}
-        >
+        <Pressable onPress={() => navigate(`/${item.id}`)}>
           <RepositoryItem item={item} />
         </Pressable>
       )}
     />
   )
-};
+}
 
 
 const RepositoryList = () => {
-
   const [sorting, setSorting] = useState({
     orderBy: 'CREATED_AT',
     orderDirection: 'DESC',
   })
 
+  const [searchKeyword, setSearchKeyword] = useState('')
+  const [value] = useDebounce(searchKeyword, 500);
+
   const { repositories, loading, error } = useRepositories(
     sorting.orderBy,
     sorting.orderDirection,
+    value,
   )
 
-  if (loading) return <Text>Loading...</Text>
+  //if (loading) return <Text>Loading...</Text>
   if (error) return <Text>Error: {error.message}</Text>
 
-  return <RepositoryListContainer repositories={repositories} setSorting={setSorting} selectedSorting={sorting}/>;
+  return (
+    <RepositoryListContainer
+      repositories={repositories}
+      setSorting={setSorting}
+      selectedSorting={sorting}
+      searchKeyword={searchKeyword}
+      setSearchKeyword={setSearchKeyword}
+    />
+  )
 }
 
 export default RepositoryList;

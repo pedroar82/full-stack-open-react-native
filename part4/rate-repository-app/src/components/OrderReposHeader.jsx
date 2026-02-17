@@ -1,6 +1,6 @@
 import  { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Button, Menu } from 'react-native-paper';
+import { Button, Menu, Searchbar  } from 'react-native-paper';
 
 const styles = StyleSheet.create({
   container: {
@@ -12,9 +12,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const OrderReposHeader = ({ selectedSorting, setSorting }) => {
+const OrderReposHeader = ({ selectedSorting, setSorting, searchKeyword, setSearchKeyword}) => {
   const [visible, setVisible] = useState(false);
-
+ 
   const openMenu = () => setVisible(true)
   const closeMenu = () => setVisible(false)
 
@@ -46,6 +46,11 @@ const OrderReposHeader = ({ selectedSorting, setSorting }) => {
 
  return (
    <View style={styles.container}>
+     <Searchbar
+       placeholder="Search"
+       onChangeText={setSearchKeyword}
+       value={searchKeyword}
+     />
      <Menu
        visible={visible}
        onDismiss={closeMenu}
