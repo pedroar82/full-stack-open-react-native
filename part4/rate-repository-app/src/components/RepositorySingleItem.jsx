@@ -5,7 +5,7 @@ import RepositoryItem from "./RepositoryItem"
 import { GET_REPOSITORY } from '../graphql/queries';
 import theme from '../../theme'
 import * as Linking from 'expo-linking';
-import { format } from 'date-fns';
+import ReviewItem from './ReviewItem';
 
 const styles = StyleSheet.create({
   button: {
@@ -45,27 +45,6 @@ const styles = StyleSheet.create({
     fontSize: theme.fontSizes.body,
     paddingBottom: 10,
   },
-   date: {
-    width: '25%',
-    fontWeight: theme.fontWeights.normal,
-    color: theme.colors.textSecondary,
-    textAlign: 'center',
-  },
-  circle: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    borderWidth: 3,
-    borderColor: '#0366d6',
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  circleText: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#0366d6',
-  },
    separator: {
     height: 10,
   },
@@ -89,23 +68,6 @@ const RepositoryInfo = ({ repository }) => {
 
 const ItemSeparator = () => <View style={styles.separator} /> 
 
-const ReviewItem = ({ review }) => {
-  // Single review item
-  return (
-    <View style={{ backgroundColor: 'white', padding: 10 }}>
-      <View style={styles.row}>
-        <View style={styles.circle}>
-            <Text style={styles.circleText}>{review.rating}</Text>
-          </View>
-        <View style={styles.col}>
-          <Text style={styles.fullName}>{review.user.username}</Text>
-           <Text style={styles.date}>{format(new Date(review.createdAt), 'dd.MM.yyyy')}</Text>
-          <Text style={styles.text}>{review.text}</Text> 
-        </View>
-      </View>
-    </View>
-  )
-};
 
 const RepositorySingleItem = () => {
   const { id } = useParams()
