@@ -31,6 +31,7 @@ const ListHeader = memo(
 
 export const RepositoryListContainer = ({
   repositories,
+  onEndReach,
   setSorting,
   selectedSorting,
   searchKeyword,
@@ -48,6 +49,8 @@ export const RepositoryListContainer = ({
   return (
     <FlatList
       data={repositoryNodes}
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0.5}
       keyExtractor={(item) => item.id}
       ItemSeparatorComponent={ItemSeparator}
       ListHeaderComponent={
@@ -77,7 +80,8 @@ const RepositoryList = () => {
   const [searchKeyword, setSearchKeyword] = useState('')
   const [value] = useDebounce(searchKeyword, 500);
 
-  const { repositories, loading, error } = useRepositories(
+  const { repositories, fetchMore, loading, error } = useRepositories(
+    2,
     sorting.orderBy,
     sorting.orderDirection,
     value,
@@ -86,9 +90,15 @@ const RepositoryList = () => {
   //if (loading) return <Text>Loading...</Text>
   if (error) return <Text>Error: {error.message}</Text>
 
+  const onEndReach = () => {
+     console.log('You have reached the end of the list');
+    fetchMore();
+  };
+
   return (
     <RepositoryListContainer
       repositories={repositories}
+      onEndReach={onEndReach}
       setSorting={setSorting}
       selectedSorting={sorting}
       searchKeyword={searchKeyword}

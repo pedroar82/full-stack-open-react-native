@@ -6,6 +6,7 @@ import { GET_REPOSITORY } from '../graphql/queries';
 import theme from '../../theme'
 import * as Linking from 'expo-linking';
 import ReviewItem from './ReviewItem';
+import useRepository from '../hooks/useRepository';
 
 const styles = StyleSheet.create({
   button: {
@@ -66,27 +67,29 @@ const RepositoryInfo = ({ repository }) => {
   )
 }
 
-const ItemSeparator = () => <View style={styles.separator} /> 
-
+const ItemSeparator = () => <View style={styles.separator} />
 
 const RepositorySingleItem = () => {
   const { id } = useParams()
-  const { data, loading, error } = useQuery(GET_REPOSITORY, {
-    fetchPolicy: 'cache-and-network',
-    variables: { id },
-  })
 
-  if (loading) return <Text>Loading...</Text>;
-  if (error) return <Text>Error: {error.message}</Text>;
+  const { repository, fetchMore, loading, error } = useRepository(3, id)
 
-  const repository = data?.repository;
-  const reviews  = repository?.reviews?.edges
+  if (loading) return <Text>Loading...</Text>
+  if (error) return <Text>Error: {error.message}</Text>
+
+  const onEndReach = () => {
+    fetchMore()
+  }
+
+  const reviews = repository?.reviews?.edges
     ? repository?.reviews?.edges.map((edge) => edge.node)
     : []
 
   return (
     <FlatList
       data={reviews}
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0.5}
       renderItem={({ item }) => <ReviewItem review={item} />}
       keyExtractor={({ id }) => id}
       ItemSeparatorComponent={ItemSeparator}
